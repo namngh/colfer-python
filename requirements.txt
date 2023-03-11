@@ -5,3 +5,5 @@ six
 
 # Testing
 coverage
+
+pydantic 1.10.6
