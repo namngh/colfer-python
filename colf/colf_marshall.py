@@ -385,7 +385,7 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
 
         return self.marshallHeader(byteOutput, offset)
 
-    def marshallList(self, value, index, byteOutput, offset, variableSubType=None):
+    def marshallList(self, value, index, byteOutput, offset, variableOuterType=None):
         STRING_TYPES_MAP = {
             List[int]: ColferMarshallerMixin.marshallListInt64,
             List[float]: ColferMarshallerMixin.marshallListFloat64,
@@ -393,8 +393,8 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
             List[str]: ColferMarshallerMixin.marshallListString,
         }
 
-        if variableSubType in STRING_TYPES_MAP:
-            functionToCall = STRING_TYPES_MAP[variableSubType]
+        if variableOuterType in STRING_TYPES_MAP:
+            functionToCall = STRING_TYPES_MAP[variableOuterType]
             return functionToCall(self, value, index, byteOutput, offset)
         else:  # pragma: no cover
             return offset
@@ -402,7 +402,7 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
     def marshallType(self, variableType, variableOuterType, value, index, byteOutput, offset):
         STRING_TYPES_MAP = {
             bool: ColferMarshallerMixin.marshallBool,
-            int: ColferMarshallerMixin.marshallInt32,
+            int: ColferMarshallerMixin.marshallInt64,
             float: ColferMarshallerMixin.marshallFloat64,
             bytes: ColferMarshallerMixin.marshallBinary,
             str: ColferMarshallerMixin.marshallString,
