@@ -427,14 +427,14 @@ class ColferUnmarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncod
         assert (self.isBinary(byteInput))
         assert (offset >= 0)
         index = 0
-        for name, modelField in self.__fields__:
+        for name, modelField in self.__fields__.items():
             variableType = modelField.type_
             variableOuterType = modelField.outer_type_
 
             newValue, offset = self.unmarshallType(
                 variableType, variableOuterType, index, byteInput, offset)
             self.setKnownAttribute(
-                name, variableType, newValue, variableSubType)
+                name, variableType, newValue, variableOuterType)
             index += 1
         return self, offset
 

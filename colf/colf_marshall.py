@@ -423,7 +423,7 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
         assert (self.isBinary(byteOutput, True))
         assert (offset >= 0)
         index = 0
-        for name, modelField in self.__fields__:
+        for name, modelField in self.__fields__.items():
             variableType = modelField.type_
             variableOuterType = modelField.outer_type_
             value = getattr(self, name)

@@ -14,40 +14,26 @@ Then use it to construct a Colfer Object and use it:
 
 ```python
 from colf import Colfer
+from typing import List, Optional
 
-class TestType(Colfer):
 
-    def __init__(self):
-        super(Colfer, self).__init__()
-        self.declareAttribute('radius', 'float64')
-        self.declareAttribute('test', 'bool')
-        self.declareAttribute('inner', 'object')
+class User(Colfer):
+    id: Optional[int]
+    height: Optional[float]
+    name: Optional[str]
+    fiend_ids: Optional[List[int]]
+    favorite: Optional[List[str]]
 
-    def marshall(self, byteOutput, offset=0):
-        offset = self.marshallFloat64(self.radius, 0, byteOutput, offset)
-        offset = self.marshallBool(self.test, 1, byteOutput, offset)
-        offset = self.marshallObject(self.inner, 2, byteOutput, offset)
-        return offset
 
-    def unmarshall(self, byteInput, offset=0):
-        self.radius, offset = self.unmarshallFloat64(0, byteInput, offset)
-        self.test, offset = self.unmarshallBool(1, byteInput, offset)
-        self.inner, offset = self.unmarshallObject(2, byteInput, offset)
-        return self, offset
+user = User(id=123, height=170.5, name="Jane Doe",
+            fiend_ids=[100, 200, 300], favorite=["swimming", "singing"])
 
-# Write to Somewhere
-exampleObject = TestType()
-exampleObject.radius = 2.5
-exampleObject.test = True
-exampleObject.inner = TestType()
-exampleObject.inner.radius = 3.0
-byteOutput = bytearray(30)
-length = exampleObject.marshall(byteOutput)
-print(byteOutput[:length])
+byte_output = bytearray(100)
+length = user.marshall(byte_output)
+print(byte_output[:length])
 
-# Read from Somewhere
-deserializedObject, _ = TestType().unmarshall(byteOutput[:length])
-print(deserializedObject, deserializedObject.inner)
+deserialize_user, _ = User().unmarshall(byte_output[:length])
+print(deserialize_user)
 ```
 
 ## Running Unit Tests
