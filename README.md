@@ -30,10 +30,10 @@ user = User(id=123, height=170.5, name="Jane Doe",
 
 byte_output = bytearray(100)
 length = user.marshall(byte_output)
-print(byte_output[:length])
+print(byte_output[:length]) # bytearray(b'\x00{\x7f\x01@eP\x00\x00\x00\x00\x00\x7f\x02\x08Jane Doe\x7f\x03\x03\xc8\x01\x90\x03\xd8\x04\x7f\x04\x02\x08swimming\x07singing\x7f')
 
 deserialize_user, _ = User().unmarshall(byte_output[:length])
-print(deserialize_user)
+print(deserialize_user) # id=123 height=170.5 name='Jane Doe' fiend_ids=[100, 200, 300] favorite=['swimming', 'singing']
 ```
 
 ## Running Unit Tests
@@ -56,3 +56,7 @@ version due to nuances not previously uncovered.
 
 Please volunteer to test it on as many exotic computers, OSes
 and send in your patches (or) bug reports.
+
+## TODO
+
+- [ ] Calculate length of byte_output when marshall
