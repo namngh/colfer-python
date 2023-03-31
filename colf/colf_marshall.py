@@ -3,6 +3,7 @@ from typing import List
 import typing
 
 from .colf_base import TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeUtils, UTFUtils, ColferConstants
+from .colf_type import Int32, UInt8, UInt16, UInt32, UInt64
 
 
 class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeUtils, UTFUtils, ColferConstants):
@@ -47,7 +48,7 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
         if value != 0:
             byteOutput[offset] = index
             offset += 1
-            byteOutput[offset] = value & 0xff
+            byteOutput[offset] = int.from_bytes(value, "little")
             offset += 1
 
         return self.marshallHeader(byteOutput, offset)
@@ -59,12 +60,13 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
                 # Flat - do not use | 0x80. See https://github.com/pascaldekloe/colfer/issues/61
                 byteOutput[offset] = index
                 offset += 1
-                offset = self.marshallInt(value, byteOutput, offset, 2)
+                offset = self.marshallInt(int.from_bytes(
+                    value, "little"), byteOutput, offset, 2)
             else:
                 # Compressed Path
                 byteOutput[offset] = (index | 0x80)
                 offset += 1
-                byteOutput[offset] = value & 0xff
+                byteOutput[offset] = int.from_bytes(value, "little")
                 offset += 1
 
         return self.marshallHeader(byteOutput, offset)
@@ -81,7 +83,8 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
                 offset += 1
 
             # Compressed Path
-            offset = self.marshallVarInt(value, byteOutput, offset)
+            offset = self.marshallVarInt(int.from_bytes(
+                value, "little"), byteOutput, offset)
 
         return self.marshallHeader(byteOutput, offset)
 
@@ -113,12 +116,14 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
                 # Flat
                 byteOutput[offset] = index | 0x80
                 offset += 1
-                offset = self.marshallInt(value, byteOutput, offset, 4)
+                offset = self.marshallInt(int.from_bytes(
+                    value, "little"), byteOutput, offset, 4)
             else:
                 # Compressed Path
                 byteOutput[offset] = index
                 offset += 1
-                offset = self.marshallVarInt(value, byteOutput, offset)
+                offset = self.marshallVarInt(int.from_bytes(
+                    value, "little"), byteOutput, offset)
 
         return self.marshallHeader(byteOutput, offset)
 
@@ -165,12 +170,14 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
                 # Flat
                 byteOutput[offset] = index | 0x80
                 offset += 1
-                offset = self.marshallInt(value, byteOutput, offset, 8)
+                offset = self.marshallInt(int.from_bytes(
+                    value, "little"), byteOutput, offset, 8)
             else:
                 # Compressed Path
                 byteOutput[offset] = index
                 offset += 1
-                offset = self.marshallVarInt(value, byteOutput, offset)
+                offset = self.marshallVarInt(int.from_bytes(
+                    value, "little"), byteOutput, offset)
 
         return self.marshallHeader(byteOutput, offset)
 
@@ -388,6 +395,7 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
     def marshallList(self, value, index, byteOutput, offset, variableOuterType=None):
         STRING_TYPES_MAP = {
             List[int]: ColferMarshallerMixin.marshallListInt64,
+            List[Int32]: ColferMarshallerMixin.marshallListInt32,
             List[float]: ColferMarshallerMixin.marshallListFloat64,
             List[bytes]: ColferMarshallerMixin.marshallListBinary,
             List[str]: ColferMarshallerMixin.marshallListString,
@@ -403,6 +411,11 @@ class ColferMarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeU
         STRING_TYPES_MAP = {
             bool: ColferMarshallerMixin.marshallBool,
             int: ColferMarshallerMixin.marshallInt64,
+            Int32: ColferMarshallerMixin.marshallInt32,
+            UInt8: ColferMarshallerMixin.marshallUint8,
+            UInt16: ColferMarshallerMixin.marshallUint16,
+            UInt32: ColferMarshallerMixin.marshallUint32,
+            UInt64: ColferMarshallerMixin.marshallUint64,
             float: ColferMarshallerMixin.marshallFloat64,
             bytes: ColferMarshallerMixin.marshallBinary,
             str: ColferMarshallerMixin.marshallString,

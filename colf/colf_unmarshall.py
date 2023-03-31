@@ -3,6 +3,7 @@ from typing import List
 import typing
 
 from .colf_base import TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeUtils, UTFUtils, ColferConstants
+from .colf_type import Int32, UInt8, UInt16, UInt32, UInt64
 
 
 class ColferUnmarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncodeUtils, UTFUtils, ColferConstants):
@@ -394,6 +395,7 @@ class ColferUnmarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncod
     def unmarshallList(self, index, byteInput, offset, variableOuterType=None):
         STRING_TYPES_MAP = {
             List[int]: ColferUnmarshallerMixin.unmarshallListInt64,
+            List[Int32]: ColferUnmarshallerMixin.unmarshallListInt32,
             List[float]: ColferUnmarshallerMixin.unmarshallListFloat64,
             List[bytes]: ColferUnmarshallerMixin.unmarshallListBinary,
             List[str]: ColferUnmarshallerMixin.unmarshallListString,
@@ -409,6 +411,11 @@ class ColferUnmarshallerMixin(TypeCheckMixin, RawFloatConvertUtils, IntegerEncod
         STRING_TYPES_MAP = {
             bool: ColferUnmarshallerMixin.unmarshallBool,
             int: ColferUnmarshallerMixin.unmarshallInt64,
+            Int32: ColferUnmarshallerMixin.unmarshallInt32,
+            UInt8: ColferUnmarshallerMixin.unmarshallUint8,
+            UInt16: ColferUnmarshallerMixin.unmarshallUint16,
+            UInt32: ColferUnmarshallerMixin.unmarshallUint32,
+            UInt64: ColferUnmarshallerMixin.unmarshallUint64,
             float: ColferUnmarshallerMixin.unmarshallFloat64,
             bytes: ColferUnmarshallerMixin.unmarshallBinary,
             str: ColferUnmarshallerMixin.unmarshallString,

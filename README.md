@@ -14,6 +14,7 @@ Then use it to construct a Colfer Object and use it:
 
 ```python
 from colf import Colfer
+from colf.colf_type import UInt8
 from typing import List, Optional
 
 
@@ -26,14 +27,14 @@ class User(Colfer):
 
 
 user = User(id=123, height=170.5, name="Jane Doe",
-            fiend_ids=[100, 200, 300], favorite=["swimming", "singing"])
+            fiend_ids=[100, 200, 300], favorite=["swimming", "singing"], age=32)
 
 byte_output = bytearray(100)
 length = user.marshall(byte_output)
-print(byte_output[:length]) # bytearray(b'\x00{\x7f\x01@eP\x00\x00\x00\x00\x00\x7f\x02\x08Jane Doe\x7f\x03\x03\xc8\x01\x90\x03\xd8\x04\x7f\x04\x02\x08swimming\x07singing\x7f')
+print(byte_output[:length]) # bytearray(b'\x00{\x7f\x01@eP\x00\x00\x00\x00\x00\x7f\x02\x08Jane Doe\x7f\x03\x03\xc8\x01\x90\x03\xd8\x04\x7f\x04\x02\x08swimming\x07singing\x7f\x05 \x7f')
 
 deserialize_user, _ = User().unmarshall(byte_output[:length])
-print(deserialize_user) # id=123 height=170.5 name='Jane Doe' fiend_ids=[100, 200, 300] favorite=['swimming', 'singing']
+print(deserialize_user) # id=123 height=170.5 name='Jane Doe' fiend_ids=[100, 200, 300] favorite=['swimming', 'singing'] age=32
 ```
 
 ## Running Unit Tests
